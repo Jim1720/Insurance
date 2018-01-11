@@ -1,0 +1,276 @@
+﻿
+
+<!DOCTYPE html>
+
+<style>
+
+  .round {   font-size: large }
+
+
+
+</style>
+
+@model Insurance.Models.Customer
+@using Insurance.Models
+ 
+@{
+
+
+
+
+    List<SelectListItem> slist = new List<SelectListItem>()
+        {
+             new SelectListItem{ Text = "CA", Value = "CA"},
+             new SelectListItem{ Text = "NV", Value = "NV"},
+             new SelectListItem{ Text = "WA", Value = "WA"}
+        };
+
+
+    // populate customer id - protected field
+    // populate custome password - modifiable - customer can change it.
+
+    var screenCustomerID = Session["CustomerID"].ToString();
+    CustomerDBConnect customerDBConnect = new CustomerDBConnect();
+    var names = from c in customerDBConnect.Customers
+                where c.CustomerID == screenCustomerID
+                select new { c.FirstName, c.LastName };
+    var name = "";
+    foreach (var c in names)
+    {
+        name = c.FirstName + " " + c.LastName;
+        // if we goto claim review use for header
+        ViewBag.first = c.FirstName;
+        ViewBag.last = c.LastName;
+    }
+
+
+
+    // display policy select status messages.
+    Policy p = Insurance.Models.PolicyLookupClass.PolicyLookup(screenCustomerID);
+    bool policyAssigned = (p == null) ? false : true;
+    var action = "";
+    var disp = "";
+    var lit = "";
+    var policyName = "";
+    if (!policyAssigned)
+    {
+        action = "Select New Policy";
+        <h4>You have not selected a policy</h4>
+    }
+    else
+    {
+        action = "Change Policy";
+        policyName = p.PolicyName;
+    }
+
+
+
+    ClaimDBConnect claimDBConnect = new ClaimDBConnect();
+    var count = claimDBConnect.Claims.Count(c => c.CustomerID == screenCustomerID);
+
+    if (count > 0)
+    {
+        lit = (count > 1) ? "claims" : "claim";
+        disp = count.ToString() + " " + lit + " found, click to show history.";
+    }
+    else
+    {
+        disp = "no claims have been submitted.";
+    }
+
+
+
+
+}
+
+<br /><h2 style="color:dodgerblue" class="display-2">Review Information for customer: @name</h2><br />
+
+@using (@Html.BeginForm())
+{
+
+
+    // hidden field customer id for model edit. it does not change
+
+    @Html.HiddenFor(m => m.CustomerID, screenCustomerID);
+
+    <div class="container">
+
+        <div class="row" form-control>
+            <div class="col-md10" style="background:black">
+
+                <text class="round" style="color:goldenrod;">Update Customer Information:</text>
+
+            </div>
+
+        </div>
+        <br />
+        <div class="row" form-control>
+
+
+
+            <div class="col-md-4">
+
+                <div class="form-group">
+
+                    <label>Password: enter new value to change password.</label>
+
+                    @Html.TextBoxFor(cust => cust.CustomerPassword, new { @class = "form-control", Placeholder = "Password", type = "password" })
+
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>First Name: </label>
+
+                    @Html.TextBoxFor(cust => cust.FirstName, new { @class = "form-control", Placeholder = "First Name" })
+
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Last Name: </label>
+
+                    @Html.TextBoxFor(cust => cust.LastName, new { @class = "form-control", Placeholder = "Last Name" })
+
+
+                </div>
+
+                <br />
+                <button type="submit" class="btn btn-primary">Update Customer Data</button>
+                <br />
+
+                </div>
+            <div class="col-md-4">
+
+                <div class="form-group">
+
+                    <label>Email Address: </label>
+
+                    @Html.TextBoxFor(cust => cust.Email, new { @class = "form-control", Placeholder = "E-Mail Address" })
+
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Phone: </label>
+
+                    @Html.TextBoxFor(cust => cust.Phone, new { @class = "form-control", Placeholder = "Phone" })
+
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                @Html.LabelFor(m => m.Address1, "Address", new { @classs = "control-label", })
+
+                <div class="form-group">
+
+                    @Html.TextBoxFor(m => m.Address1, new { @class = "form-control", Placeholder = "Address Line 1" })
+                </div>
+
+
+
+                <div class="form-group">
+
+                    @Html.TextBoxFor(m => m.Address2, new { @class = "form-control", Placeholder = "Address Line 2" })
+
+                    <div>
+
+                        <div class="form-row">
+
+                            @Html.LabelFor(m => m.City, " ", new { @classs = "control-label", })
+
+                            @Html.TextBoxFor(m => m.City, new { @class = "form-control", Placeholder = "City" })
+
+                            @Html.LabelFor(m => m.State, " ", new { @classs = "control-label", })
+
+                            @Html.DropDownListFor(m => m.State, @slist, new { @class = "form-control" })  
+
+                            @Html.LabelFor(m => m.Zip, " ", new { @classs = "control-label", })
+
+                            @Html.TextBoxFor(m => m.Zip, new { @class = "form-control", Placeholder = "Zip" })
+
+                        </div>
+
+                    </div>
+                </div>
+
+             
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="msg">
+
+        @Html.ValidationSummary()
+
+        @ViewBag.Message
+
+        </div>
+
+        <br />
+
+        <div class="row" form-control>
+            <div class="col-md10" style="background:black">
+
+                <text class="round" style="color:goldenrod;">Claim and Coverage Information:</text>
+
+            </div>
+
+        </div>
+
+   
+
+    <div class="container">
+
+        <div class="row" form-control><br></div>
+
+        <div class="col-md-6">
+
+            <h3 display-5 style="color:dodgerblue">Claim</h3> 
+            
+
+           <h4>@Html.ActionLink("File Claim", "FileClaim", "Home", null, new { @class = "btn btn-primary" })</h4> 
+
+            @if (count > 0)
+            {
+                <h4>@Html.ActionLink(@disp, "ShowClaimHistory", "Home", null, new { @class = "btn btn-primary" })</h4>
+            }
+            
+
+        </div>
+
+
+        <div class="col-md-6">
+
+            <h3 display-5 style="color:dodgerblue">Coverage:</h3>
+
+            <h4 style="color:white">Current Policy Assigned is: <b> @policyName</b></h4>
+           
+            @if (!policyAssigned)
+            {
+            <h4> @Html.ActionLink(@action, "AssignPolicy", "Home", null, new { @class = "btn btn-success" }) </h4>
+            }
+            else
+            {
+            <h4> @Html.ActionLink(@action, "AssignPolicy", "Home", null, new { @class = "btn btn-primary" }) </h4>
+            }
+
+        </div>
+
+        </div>
+
+
+
+
+  }
+

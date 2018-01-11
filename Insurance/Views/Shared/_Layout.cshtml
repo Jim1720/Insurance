@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+@using Insurance.Models
+@using System.Data.Entity
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>  
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/index.css" rel="stylesheet" />
+    <link href="~/Content/Project.css" rel="stylesheet"/>
+
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+
+
+    @{
+        var CustID = Session["CustomerID"];
+        string first = null;
+        string last = null;
+
+        if (CustID != null)
+        { 
+            string CusID = CustID.ToString();
+            CustomerDBConnect customerDBConnect = new CustomerDBConnect();
+            var cu = from c in customerDBConnect.Customers
+                     where CusID == c.CustomerID
+                     select c;
+            foreach (var c in cu)
+            {
+                first = c.FirstName;
+                last = c.LastName;
+            }
+        }
+
+    }
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+
+
+            <div class="navbar-header">
+             
+                <div class="pos-f-t">
+                    <div class="collapse" id="navbarToggleExternalContent" style="color:white">
+                        
+
+                        <h4 class="display-4"><b>Register</b></h4>
+                        <p>New Customers must first register<br />
+                        to use this site</p><b>@Html.ActionLink("Register", "RegisterCustomer", "Home") </b> 
+                        <br />
+
+                        <h4 class="display-4"><b>Sign-In</b></h4>
+                        <p>
+                            Existing Customers must sign in<br />
+                            to use this site
+                        </p><b>  @Html.ActionLink("Sign-in", "CustomerReviewSignon", "Home")</b>
+                        <br /> 
+
+                        <h4 class="display-4"><b>Administer</b></h4>
+                        <p>
+                            Administrator menu<br />
+                            for this site
+                        </p><b>@Html.ActionLink("Admin", "AdminSignIn", "Home")   </b>
+                        <br /> 
+
+                        @{
+                            var fish = Session["Splash"];
+                            var view = "";
+                            var link = "";
+                            if (fish.ToString() == "Index")
+                            {
+                                view = "formal";
+                                link = "Classic";
+
+                                <h4 class="display-4"><b>Classic</b></h4>
+                                <p>
+                                    Show Classic<br />
+                                    Splash
+                                </p><b>@Html.ActionLink(link, view, "Home")   </b>
+                                <br />
+                            }
+                            else
+                            {
+                                view = "Index";
+                                link = "First";
+
+                                <h4 class="display-4"><b>Formal</b></h4>
+                                <p>
+                                    Show Formal<br />
+                                    Splash
+                                </p><b>@Html.ActionLink(link, view, "Home")   </b>
+                                <br />
+                            }
+
+                        } 
+
+                        <h4 class="display-4"><b>About</b></h4>
+                        <p>
+                            Display site<br />
+                            information
+                        </p><b>@Html.ActionLink("About", "About", "Home")   </b>
+                        <br /> 
+                        
+                        
+
+
+                    </div>
+                    <nav class="navbar navbar-dark bg-dark nav-justified">
+                        <br />
+                        <label class="navbar-toggler button-default-outline" type="button" data-toggle="collapse"
+                               data-target="#navbarToggleExternalContent"
+                               aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <button style="color:white; Background:black;">Start</button>
+                        </label> 
+
+                        @if( CustID == null )
+                        {
+                            <label style=" font-size: x-large; font-family:Arial; color:gold; font-style:italic" > 
+                                    Your Day with new insurance !!</label>
+                        }
+
+                        @if (CustID != null)
+                        {
+                             
+                                <a class="nav-item nav-link active name1" href="#">@first</a>
+                                <a class="nav-item nav-link name1" href="#">@last</a>
+                                @Html.ActionLink("   Review", "CustomerReview", "Home",null, new { @class = "nav-item nav-link link1" }) 
+                                @Html.ActionLink("   File", "FileClaim", "Home", null, new { @class = "nav-item nav-link link1" })
+                                @Html.ActionLink("   History", "ShowClaimHistory", "Home", null, new { @class = "nav-item nav-link link1" })  
+
+                        }
+
+                    </nav>
+
+                </div>
+              
+            </div>
+            
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+        
+        </footer>
+    </div> 
+</body>
+</html>

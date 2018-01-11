@@ -1,0 +1,83 @@
+﻿
+<!DOCTYPE html>
+
+
+@{
+
+    string[] items = { "Medical", "Dental", "Vision" };
+    var selectList = new SelectList(items);
+
+
+}
+
+@model Insurance.Models.Policy
+
+<br />
+<h2>Add Policy</h2>
+<h4 style="color:dodgerblue">Use this screen to add a new policy to the database.</h4>
+
+@using (@Html.BeginForm())
+{
+    <div class="row" form-control>
+
+        <div class="col-md-6">
+
+            <div class="form-group">
+
+                @Html.LabelFor(m => m.PolicyName, "Policy Name", new { @classs = "control-label", })
+
+                @Html.TextBoxFor(m => m.PolicyName, new { @class = "form-control", Placeholder = "Policy Name" })
+
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(m => m.PolicyType, "Policy Type", new { @classs = "control-label", })
+
+                @Html.DropDownListFor(m => m.PolicyType , selectList,  new { @class = "form-control" })
+
+
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(m => m.Deductible, "Deductible", new { @classs = "control-label", })
+
+                @Html.TextBoxFor(m => m.Deductible, new { @class = "form-control", Placeholder = "Deductible" })
+
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(m => m.Copay, "Copay", new { @classs = "control-label", })
+
+                @Html.TextBoxFor(m => m.Copay, new { @class = "form-control", Placeholder = "Copay" })
+
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(m => m.Rate, "Rate", new { @classs = "control-label", })
+
+                @Html.TextBoxFor(m => m.Rate, new { @class = "form-control", Placeholder = "Rate" })
+
+            </div>
+
+            
+        </div>
+
+    </div>
+    <button type="submit" class="btn btn-primary">Add policy</button>
+
+    <div class="msg"> 
+    @Html.ValidationSummary()
+
+    @ViewBag.Message
+
+        </div>
+
+
+
+    <h4>@Html.ActionLink("Menu", "AdminSignIn", "Home", null, new { @class = "btn btn-primary" })</h4>
+
+}

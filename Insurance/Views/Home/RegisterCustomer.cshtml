@@ -1,0 +1,246 @@
+﻿
+    <!DOCTYPE html>
+
+<style>
+
+    .big { font-size: large }
+
+</style>
+
+    @model Insurance.Models.Customer
+
+   <br /> <h2 align="center" style ="color:dodgerblue" class="display-2">Register Customer</h2>
+
+@{ 
+
+    List<SelectListItem> slist = new List<SelectListItem>()
+    {
+         new SelectListItem{ Text = "CA", Value = "CA"},
+        new SelectListItem{ Text = "NV", Value = "NV"},
+         new SelectListItem{ Text = "WA", Value = "WA"}
+    };
+
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+
+    /* pop-over on Customer iD field explaining it.
+    $(document).ready(function () { 
+
+
+        $("#custidpopover").popover(
+            {
+                triger: 'hover',
+                placement: 'bottom',
+                content: '  Customer ID can be like John123 or any series of letters plus numbers only. Please remember it to sign-in in the future. Also remember your password too. '
+
+            });
+
+    }); */
+
+
+</script>
+<style>
+
+    .control-label { color: white;}
+
+</style>
+
+
+<!-- script src="popover.js"></!--script -->
+
+    @using (@Html.BeginForm())
+    {
+        <br />
+
+
+
+        <div class="container">
+
+            <div class="row" form-control>
+                <div class="col-md10" style="background:black">
+
+                    <text class="big" style="color:goldenrod;">Customer Identification:</text>
+
+                </div>
+
+            </div>
+            <br />
+                <div class="row" form-control> <br />
+                     
+                    <div class="col-md-6"> 
+                        <div class="form-group">
+
+                            @Html.LabelFor(m => m.CustomerID, "Customer Identification", new { @class = "control-label" })
+
+
+
+                            <div class="input-group">
+
+                                <span class="input-group-addon" id="basic-addon1">$</span>
+
+                                @Html.TextBoxFor(cust => cust.CustomerID, new
+                               {
+
+                                   @class = "form-control",
+                                   Placeholder = "Enter Customer ID",
+                                   style = "color:blue",
+                                   id = "custidpopover"
+                               })
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label">Password: </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-addon" id="basic-addon1">?</span>
+
+                                @Html.TextBoxFor(cust => cust.CustomerPassword, new { @class = "form-control", Placeholder = "Password", type = "password", style = "color:blue" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="msg">
+
+                            @Html.ValidationSummary()
+
+                            @ViewBag.Message
+                        </div>
+
+                    </div>
+                        <br /><br /><nr></nr>
+                        <br /><br /><nr></nr>
+                    </div>
+                <br />
+
+                <div class="row" form-control>
+                    <div class="col-md10" style="background:black">
+
+                        <text class="big" style="color:goldenrod;">Customer Information:</text>
+
+                    </div>
+
+                </div>
+                <br />
+                
+
+
+                <div class="row" form-control>
+
+                    <div class="col-md-6">
+
+                     
+
+                        <div class="form-group">
+
+                            <label class="control-label">First Name: </label>
+
+                            @Html.TextBoxFor(cust => cust.FirstName, new { @class = "form-control", Placeholder = "First Name", style="color:dogerblue" })
+
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label">Last Name: </label>
+
+                            @Html.TextBoxFor(cust => cust.LastName, new { @class = "form-control", Placeholder = "Last Name", style = "color:dogerblue" })
+
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="control-label">Email Address: </label>
+
+                            @Html.TextBoxFor(cust => cust.Email, new { @class = "form-control", Placeholder = "E-Mail Address" })
+
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label">Phone: </label>
+
+                            @Html.TextBoxFor(cust => cust.Phone, new { @class = "form-control", Placeholder = "Phone" })
+
+
+                        </div>
+                    </div>
+
+                 
+
+                    <div class="col-md-6">
+
+                        @Html.LabelFor(m => m.Address1, "Address Information:", new { @class = "control-label", })
+
+                        <div class="form-group">
+
+                            @Html.TextBoxFor(m => m.Address1, new { @class = "form-control", Placeholder = "Address Line 1" })
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            @Html.TextBoxFor(m => m.Address2, new { @class = "form-control", Placeholder = "Address Line 2" })
+
+                            <div>
+
+                                <div class="form-row">
+
+                                    @Html.LabelFor(m => m.City, " ", new { @classs = "control-label", })
+
+                                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", Placeholder = "City" })
+
+                                    @Html.LabelFor(m => m.State, " ", new { @classs = "control-label", })
+
+                                    @Html.DropDownListFor(m => m.State, @slist, new { @class = "form-control" }) 
+
+                                    @Html.LabelFor(m => m.Zip, " ", new { @classs = "control-label", })
+
+                                    @Html.TextBoxFor(m => m.Zip, new { @class = "form-control", Placeholder = "Zip" })
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label">Promotion Code: </label>
+
+                            @Html.TextBoxFor(m => m.PromotionCode, new { @class = "form-control", Placeholder = "Promotion Code" })
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div> 
+            <br />
+
+            <button type="submit" class="btn btn-success button-default-outline">Register</button>
+            <br /><br />
+
+            <div style="color:gray">
+                <p>Please make a note of Customer ID and password for future reference.</p>
+                <p>Demonstration site: data is fictional and no real business is conducted here.</p>
+                <p>Please be sure to enter the promotion code supplied by site developer. Thank you.</p>
+            </div>
+
+            }
+
+
+ 
+

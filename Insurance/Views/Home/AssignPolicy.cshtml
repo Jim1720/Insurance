@@ -1,0 +1,66 @@
+﻿
+ 
+<!DOCTYPE html>
+ 
+<style>
+    th {
+        font-size: medium; color: goldenrod;
+    }
+
+    td {
+        font-size: medium;
+    }
+
+</style> 
+
+@model Insurance.Models.Policy
+
+@using Insurance.Models 
+  
+
+@using (Html.BeginForm())
+{
+    <br />
+        <h2>Policy Assignment </h2>
+        <br />
+        <h4 style="color:dodgerblue">Please select a policy by clicking on the desired policy name</h4> 
+        <br />
+
+            <table class="table">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Select Name</th> 
+                        <th>Deductible</th>
+                        <th>Copay</th>
+                        <th>Type</th>
+                        <th>Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @{  PolicyDBConnect context = new PolicyDBConnect();
+                        var list = from pol in context.Policies
+                                   select pol;
+                        var count = 0;
+
+                        foreach (var p in list)
+                        {
+                            count++;
+                            <tr>
+                                <td>@Html.ActionLink(p.PolicyName, "AssignPolicy", "Home", new { id =  @p.PolicyID }, null)</td> 
+                                <td>@p.Deductible</td>
+                                <td>@p.Copay</td>
+                                <td>@p.PolicyType</td>
+                                <td>@p.Rate</td>
+                            </tr>
+
+                        }
+                    }
+
+                </tbody>
+            </table>
+            <hr />
+            @Html.ActionLink("Return", "CustomerReview", "Home", null, new { @class = "btn btn-primary" })
+                        }
+

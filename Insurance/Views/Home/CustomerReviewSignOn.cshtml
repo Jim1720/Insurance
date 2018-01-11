@@ -1,0 +1,126 @@
+﻿
+ 
+ 
+
+@{ 
+
+    string[] items = { "Personal Info", "Select New Policy" };
+    var selectList = new SelectList(items);
+
+
+
+}
+
+<!DOCTYPE html>
+
+@model Insurance.Models.CustomerReviewSignOn
+
+<br /><h2 style="color:dodgerblue">Customer Sign-In</h2>
+
+@using (@Html.BeginForm())
+{
+
+
+    <div class="container">
+
+        <div class="row" form-control><br /></div>
+
+
+        <div class="row" form-control>
+            <div class="col-md10" style="background:black">
+
+                <text style="color:goldenrod;">Customer Information:</text>
+
+            </div>
+
+        </div>
+        <br />
+
+        <div class="row" form-control>
+
+            <div class="col-md-6">
+
+                <div class="form-group">
+
+                    @Html.LabelFor(m => m.CustomerID, "Customer Identification", new { @class = "control-label", })
+
+                    <div class="input-group">
+
+                        <span class="input-group-addon" id="basic-addon1">$</span>
+
+                        @Html.TextBoxFor(cust => cust.CustomerID, new { @class = "form-control", Placeholder = "Enter Customer ID", style = "color:blue" })
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    @Html.LabelFor(m => m.Password, "Password", new { @class = "control-label", })
+
+                    <div class="input-group">
+
+                        <span class="input-group-addon" id="basic-addon1">?</span>
+
+                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", Placeholder = "Password", type = "password", style = "color:blue" })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row" form-control>
+            <div class="col-md10" style="background:black">
+
+                <text style="color:goldenrod;">Select Action:</text>
+
+            </div>
+
+        </div>
+        <br />
+
+
+
+        <div class="row" form-control>
+
+            <div class="col-md-6">
+                <div class="form-group">
+
+                    @Html.LabelFor(m => m.Password, "Customer Action", new { @classs = "control-label", })
+
+                    @Html.DropDownListFor(m => m.Action, selectList, new { @class = "form-control", style = "color:blue" })
+
+
+
+
+                </div>
+            </div>
+
+            <div class="col-md-4 msg">
+
+
+                @Html.ValidationSummary()
+
+                @ViewBag.Message
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+        <br />
+        <br />
+
+<button type="submit" class="btn btn-primary">Sign In</button>
+
+
+
+
+
+}
+
+ 

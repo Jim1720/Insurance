@@ -1,0 +1,88 @@
+﻿
+
+<!DOCTYPE html>
+
+PE html>
+
+<style>
+    th {
+        color: goldenrod
+    }
+</style>
+
+
+
+@model Insurance.Models.PolicySearch
+
+<br /><h2>Policy Search</h2>
+
+@using (@Html.BeginForm())
+{
+
+    <h4 style="color:dodgerblue">Enter the first part of the policy name to lookup, or leave blank to list all policies.</h4>
+    <br />
+    <div class="row" form-control>
+
+        <div class="col-md-6">
+
+            <div class="form-group">
+
+                @Html.LabelFor(m => m.PolicyName, "Policy Name", new { @classs = "control-label", })
+
+                @Html.TextBoxFor(m => m.PolicyName, new { @class = "form-control", Placeholder = "first part of name or blank for all" })
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Search</button>
+
+    @ViewBag.Message
+
+
+    if (Model != null)  // do not show 1st time.
+    {
+
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Policy Name</th>
+                    <th>Deductible</th>
+                    <th>Copay</th>
+                    <th>Rate</th>
+                    <th>PolicyType</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+                    var count = 0;
+                    foreach (var policy in @Model.policies)
+                    {
+
+                        count++;
+                        <tr>
+                            <th scope="row">@count</th>
+                            <td>@policy.PolicyName</td> 
+                            <td>@policy.Deductible</td> 
+                            <td>@policy.Copay</td> 
+                            <td>@policy.Rate</td>
+                            <td>@policy.PolicyType</td>
+                        </tr>
+                    }
+                } 
+                
+
+            </tbody>
+        </table>
+                    }
+
+
+       <h4>@Html.ActionLink("Menu", "AdminSignIn", "Home", null, new { @class = "btn btn-primary" })</h4>
+}
+
+
+

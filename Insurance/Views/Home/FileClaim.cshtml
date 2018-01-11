@@ -1,0 +1,182 @@
+﻿
+@model Insurance.Models.Claim
+@using Insurance.Models
+
+@{
+
+    var screenCustomerID = Session["CustomerID"].ToString();
+    var first = "";
+    var last = "";
+    int policyID = 0;
+    SelectList serviceList = ViewBag.dropDownList;
+    CustomerDBConnect customerDBConnect = new CustomerDBConnect();
+    var cust = from c in customerDBConnect.Customers
+               where c.CustomerID == screenCustomerID
+               select c;
+    foreach (var cus in cust)
+    {
+        first = cus.FirstName;
+        last = cus.LastName;
+        policyID = cus.PoicyID;
+    }
+
+
+
+    List<SelectListItem> dlist = new List<SelectListItem>()
+    {
+         new SelectListItem{ Text = "none", Value = "none"},
+        new SelectListItem{ Text = "1001", Value = "1001"},
+         new SelectListItem{ Text = "1002", Value = "1002"}
+    };
+
+    List<SelectListItem> plist = new List<SelectListItem>()
+    {
+         new SelectListItem{ Text = "none", Value = "none"},
+        new SelectListItem{ Text = "9001", Value = "9001"},
+        new SelectListItem{ Text = "9002", Value = "9002"}
+    };
+
+    List<SelectListItem> dr = new List<SelectListItem>()
+    {
+         new SelectListItem{ Text = "Dr. Smith", Value = "Doc Smith"},
+         new SelectListItem{ Text = "Dr. Jones", Value = "Doc Severnson"}
+    };
+
+    List<SelectListItem> clinic = new List<SelectListItem>()
+    {
+         new SelectListItem{ Text = "First Clinic", Value = "First Clinic"},
+         new SelectListItem{ Text = "Second Clinic", Value = "Second Clinic" },
+         new SelectListItem{ Text = "The Hospital", Value = "The Hospital"}
+    };
+
+    List<SelectListItem> typeLocation = new List<SelectListItem>()
+    {
+         new SelectListItem{ Text = "Hospital", Value = "Hospital"},
+         new SelectListItem{ Text = "Outpatient", Value = "Outpatient"}
+    };
+
+    List<SelectListItem> payAction = new List<SelectListItem>()
+    {
+         new SelectListItem{ Text = "Billed to Provider", Value = "Billed to Provider"},
+         new SelectListItem{ Text = "Patient Paid Out of Pocket", Value = "Paytent Paid Out of Pocket"}
+    };
+
+    // populate service items
+    List<SelectListItem> serviceItems = new List<SelectListItem>();
+    ServiceDBConnect context = new ServiceDBConnect();
+    var services = from serv in context.Services
+                   where policyID == serv.PolicyID
+                   select serv;
+    foreach (var sv in services)
+    {
+        SelectListItem item = new SelectListItem { Text = sv.ServiceName, Value = sv.ServiceName };
+        serviceItems.Add(item);
+    }
+
+}
+
+
+<br />
+<h2 style="color:dodgerblue" class="display-2">File Claim for: @first  @last</h2>
+
+@using (@Html.BeginForm())
+{
+    <br />
+    <br/>
+
+
+<div class="container" style="border:solid; color:dodgerblue">
+
+    <div class="row" form-control><br></div>
+
+    <div class="row" form-control>
+
+       
+
+        <div class="col-md-4"> 
+
+                @Html.LabelFor(m => m.First, "Patient First:")
+                @Html.TextBoxFor(m => m.First, @first, new { @class = "form-control", style = "color:blue" }) 
+                @Html.LabelFor(m => m.Last, "Patient Last:")
+                @Html.TextBoxFor(m => m.Last, @last, new { @class = "form-control", style = "color:blue" })
+             
+            
+            <br /><label style="color:gray">Diagnosis Codes:</label> 
+                @Html.DropDownListFor(m => m.Diag1, @dlist,  new { @class = "form-control" , placehoder="First Diagnosis"})  
+                @Html.DropDownListFor(m => m.Diag2, @dlist,  new { @class = "form-control" })
+             
+
+            <br /><label style="color:gray">Patient Procedure Codes:</label> 
+                @Html.DropDownListFor(m => m.Proc1, @plist, new { @class = "form-control" }) 
+                @Html.DropDownListFor(m => m.Proc2, @plist, new { @class = "form-control" }) 
+                @Html.DropDownListFor(m => m.Proc3, @plist, new { @class = "form-control" }) 
+
+            <br />
+
+        </div>
+        
+        <div class="col-md-4">
+
+
+            <label>Physician:</label><br />
+            @Html.DropDownListFor(m => m.Doctor, @dr, new { @class = "form-control", placeholder = "Physician" })
+
+            <label>Clinic Name:</label><br />
+            @Html.DropDownListFor(m => m.Clinic, clinic, "", new { @class = "form-control", placeholder = "Clinic or Location" }) 
+
+            
+            <br />
+            <div class="form-inline">
+            <label>Date of Service:</label><br />
+                  @Html.TextBoxFor(m => m.DateService, new { @class = "form-control", Placeholder = "Date of Service" })
+             </div>
+             <div class="form-inline">
+            <label>Services: </label><br />
+                  @Html.DropDownListFor(m => m.Service,@serviceItems, "", new { @class = "form-control", style = "color:blue" })
+             </div> 
+           
+             
+            <label>Location Type:</label><br />
+            @Html.DropDownListFor(m => m.Location, typeLocation, "", new { @class = "form-control", placeholder = "Location" })
+           
+         
+
+            @Html.HiddenFor(m => m.CustomerID, @screenCustomerID)
+
+         
+        </div> 
+
+        <div class="col-md-4">
+             
+            <label>Referring Clinic/Physician:</label><br />
+            @Html.TextBoxFor(m => m.ReferralFromClinicOrDoc, new { @class = "form-control", Placeholder = "Referral Clinic/doctor" })
+
+            <label>Payment Method:</label><br />
+            @Html.DropDownListFor(m => m.PaymentAction, @payAction, new { @class = "form-control", Placeholder = "Payment Method" })
+
+            <br />
+            <label>Notes:</label><br />
+            @Html.TextBoxFor(m => m.DetailNote, new { @class = "form-control", Placeholder = "Detail Note" })
+
+            <div class="msg">
+                @Html.ValidationSummary()
+
+                @ViewBag.Message
+            </div>
+
+        </div>
+
+     </div>
+        </div>
+             
+     <br />
+     <br/>
+     <br/>
+     <br />
+    <br /><button type="submit" class="btn btn-primary">Submit Claim</button>
+    <button type="reset" class="btn btn-primary">Clear Form</button>
+    @Html.ActionLink("Return", "CustomerReview", "Home", null, new { @class = "btn btn-primary" })
+
+   
+
+}

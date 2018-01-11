@@ -1,0 +1,99 @@
+﻿ 
+
+<!DOCTYPE html>
+
+<style>
+
+    th { color: goldenrod}
+
+</style>
+
+
+
+@model Insurance.Models.CustomerSearch
+<br />
+<h2>Customer Search</h2>
+
+@using (@Html.BeginForm())
+{
+
+    <h4 style="color:dodgerblue">Enter the first part of the names to lookup, or leave blank to list all policies.</h4>
+    <br />
+    <div class="row" form-control>
+
+        <div class="col-md-6">
+
+            <div class="form-group">
+
+                @Html.LabelFor(m => m.PartialFirstName, "First Name", new { @classs = "control-label", })
+
+                @Html.TextBoxFor(m => m.PartialFirstName, new { @class = "form-control", Placeholder = "partial first or blank" })
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="form-group">
+
+                @Html.LabelFor(m => m.PartialLastName, "Last Name", new { @classs = "control-label", })
+
+                @Html.TextBoxFor(m => m.PartialLastName, new { @class = "form-control", Placeholder = "first part of name or blank for all" })
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="msg">
+
+    @Html.ValidationSummary()
+
+    @ViewBag.Message
+
+    </div>
+
+   
+
+    if (@Model != null) // do not show 1st time.
+    {
+
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            @{
+                var count = 0;
+                foreach (var cust in @Model.customers)
+                {
+
+                    count++;
+                    <tr>
+                        <th scope="row">@count</th>
+                        <td>@cust.LastName</td>
+                        <td>@cust.FirstName</td>
+                    </tr>
+                }
+            }
+   
+            </tbody>
+        </table>
+                }
+
+
+    <button type="submit" class="btn btn-primary">Search</button>
+    <h4>@Html.ActionLink("Menu", "AdminSignIn", "Home", null, new { @class = "btn btn-primary" })</h4>
+
+   }
+
+
+
+
+

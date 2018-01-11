@@ -1,0 +1,132 @@
+﻿
+
+<!DOCTYPE html>
+
+<style>
+    
+    th {
+        font-size: medium; color:springgreen;
+    }
+
+    td {
+        font-size: medium;
+    } 
+
+    h2 { color: dodgerblue; }
+
+</style>
+
+@model Insurance.Models.Claim
+
+@using Insurance.Models
+
+
+
+@using (Html.BeginForm())
+{
+     
+    <br />
+    <br/>
+
+    <br />
+    <br />
+
+    <h2>Claim History</h2>
+
+
+
+
+        <table class="table">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Patient</th>
+                    <th>Service Date</th> 
+                    <th>Clinic</th>
+                    <th>Doctor</th>
+                    <th>Location</th> 
+                </tr>
+            </thead>
+            <tbody>
+
+
+                @{  
+                    var customerID = Session["CustomerID"].ToString();
+                    ClaimDBConnect claimDBconnect = new ClaimDBConnect();
+                    var list = from claim in claimDBconnect.Claims
+                               where claim.CustomerID == customerID
+                               orderby claim.DateService descending
+                               select claim;
+                    var count = 0;
+                    var loop = 0;
+                  
+                    foreach (var c in list)
+                    {
+                        count++;
+                        loop++;
+                       
+                        var name = c.First + " " + c.Last;
+                        var dos = c.DateService.ToString("MM/dd/yy hh:mm tt");
+                        var procedures = "none";
+                        var status = "unknown";
+                        if (c.Proc1 != "") { procedures = c.Proc1;  }
+                        if(c.Proc2 != "" && c.Proc2 != "none") { procedures = procedures + " " + c.Proc2; }
+                        if(c.Proc3 != "" && c.Proc3 != "none") {procedures  = procedures + " " + c.Proc3; }
+                        <tr>
+
+                            <td style="color:goldenrod">
+                                @name 
+                            </td>
+                            <td style="color:dodgerblue">
+                                @dos
+                            </td> 
+                            <td>@c.Clinic<text> 
+                            <td>@c.Doctor</td> 
+                            <td>@c.Location</td>  
+                        </tr>
+
+                        var diag = "";
+                        if(c.Diag1 != "") { diag = c.Diag1; }
+                        if(c.Diag2 != "" && c.Diag2 !="none") { diag += c.Diag2; }
+                        <tr>
+                            <td>Diagnosis:</td><td>@diag</td> 
+                        </tr>
+                        <tr>
+                            <td>Procedure:</td><td>@procedures<td/>
+                        </tr>
+                        <tr>
+                            <td>Note:</td>
+                            <td>@c.DetailNote
+                            <td />
+                        </tr>
+                        <tr> 
+                             <td>Referral:</td>
+                            <td>@c.ReferralFromClinicOrDoc</td> 
+                        </tr>
+                        <tr> 
+                        <td>Payment Method:</td><td>@c.PaymentAction</td>
+                        </tr>
+                        <tr>
+                            <td>Status:</td>
+                            <td>
+                                @{  
+                                    var day = @c.DateService.Day;
+                                    status = (day % 2) == 0 ? "Paid" : "Pending"; // even day service call it paid 
+                                } 
+                                @status
+                            </td>
+                        </tr>
+                        
+                         
+                    }
+                                     
+                }
+               
+            </tbody>
+        </table>
+<br />
+  
+   
+        @Html.ActionLink("Return", "CustomerReview", "Home", null, new { @class = "btn btn-primary" })
+
+ }
+
